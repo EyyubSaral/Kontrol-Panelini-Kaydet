@@ -28,16 +28,19 @@ export default function App() {
   const DEFAULT_CONFIG = blankConfig.map((widget) => {
     return { ...widget, positionData: { ...widget.positionData } };
   });
-  const localeConfig = localStorage.getItem("widgetConfig");
-  const [widgetConfig, setWidgetConfig] = useState(
-    localeConfig && DEFAULT_CONFIG
-  );
+
+  const [widgetConfig, setWidgetConfig] = useState([]);
   const [saveRequested, setSaveRequested] = useState(false);
+
+  useEffect(() => {
+    const configData = JSON.parse(localStorage.getItem("widgetConfig"));
+    setWidgetConfig(configData || DEFAULT_CONFIG);
+  }, []);
 
   function save() {
     setSaveRequested(true); // Aşağıdaki 126. satırda yeşil "Kaydedildi" mesajının oluşturulmasına neden olur. State daha sonra 70. satırdaki setTimeout tarafından tekrar false değerine ayarlanır ve mesaj kaldırılır.
 
-    localStorage.setItem("widgetConfig", widgetConfig);
+    localStorage.setItem("widgetConfig", JSON.stringify(widgetConfig));
   }
 
   /****** Kodunuzu yukarıya yazın*******************************************************************  
